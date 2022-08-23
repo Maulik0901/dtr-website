@@ -1,0 +1,50 @@
+.searches {
+    width:75%;
+    margin:20px auto;
+    box-shadow: 1px 1px 8px #888;
+    padding:20px;
+    background:url("../../Assets/images/dtr-bg.jpg");
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+
+.ml-3, .mx-3 {
+    margin-left: 1rem!important;
+    display: contents;
+}
+
+.mt-1, .my-1 {
+    margin-top: 0.25rem!important;
+}
+
+hr {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border: 0;
+    border-top: 1px solid rgba(0,0,0,.1);
+}
+
+.nav-link {
+        color: #fff!important;
+        font-weight: 700;
+        text-align: center;
+        border: 1px solid #e9ecef;
+        border-bottom-color: #dee2e6;
+        border-radius: 0;
+        background-image: linear-gradient(90deg,#c564aa 0,#e189a7 50%,#c564aa)!important;
+}
+
+.nav-link.active {
+    color: #000 !important;
+    background-color: #fff !important;
+    background-image:none !important;
+    border-color: #dee2e6 #dee2e6 #fff;
+}
+
+.search-by-id {
+    box-shadow: 1px 1px 8px #888;
+    padding: 20px;
+}

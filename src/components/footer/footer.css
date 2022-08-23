@@ -1,0 +1,43 @@
+.footer {
+  background-color: #566fa7ad;
+    padding: 50px;
+    color: #fff;
+    line-height: 30px;
+    font-size:15px;
+}
+
+.footer h2 {
+  color:#e71d73;
+}
+
+.custom a {
+  padding:5px 20px;
+  display:block;
+}
+
+ .custom a:hover {
+  color:#e71d73;
+  text-decoration: none;
+}
+
+.about-dtr {
+  text-align: center;
+  padding:5px;
+}
+
+.secondary {
+  display: flex;
+  justify-content: space-around;
+  padding: 24px 0;
+  margin: 0;
+  background-color: #ccc;
+  flex-direction: row;
+  align-items: center;
+  font-size: 11px;
+  flex-wrap: wrap;
+}
+
+.infoston-site:hover {
+  text-decoration: none;
+  color:#564ea9;
+}

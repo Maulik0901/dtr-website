@@ -1,0 +1,28 @@
+.terms-of-use {
+text-align: justify;
+width:85%;
+margin:20px auto;
+box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+padding:10px 20px;
+font-size: 14px;
+}
+
+.terms-of-use p {
+    line-height:25px;
+}
+
+.term-head {
+    text-align: center;
+}
+
+.conditions ol li {
+list-style: decimal;
+line-height:30px;
+}
+.inner-list li {
+    list-style: lower-alpha !important;
+}
+
+.inner-most-list li {
+    list-style: lower-roman !important;
+}

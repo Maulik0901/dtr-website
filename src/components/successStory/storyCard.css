@@ -1,0 +1,43 @@
+.story-card{
+    display: flex;
+    flex-direction: column;
+  
+    align-items: flex-start;
+    max-width: 300px;
+    background: rgba( 255, 255, 255, 0.25 );
+   
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 10px;
+    border: 1px solid rgb(230, 230, 230);
+    margin: 0.5rem;
+   border-radius: 10px;
+   transition: 1sec;
+}
+.card-img{
+object-fit: contain;
+width: 100%;
+}
+
+.story-card:hover{
+    transition: 1sec;
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+}
+
+.story-card .card-body{
+padding: 1rem;
+margin: 1rem;
+}
+
+.story-card .card-title{
+    color: #51505d;
+    font-size: 1.5rem;
+    font-weight: 400;
+}
+
+.story-card .card-story{
+    color: #72727d;
+    font-size: 15px;
+    line-height: 1.5;
+    text-overflow: ellipsis;
+}

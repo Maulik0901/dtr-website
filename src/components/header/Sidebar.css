@@ -1,0 +1,46 @@
+.sideBbtn {
+    cursor: pointer;
+}
+.sideBbtn:hover {
+}
+.sideShowbtn {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    
+}
+@media screen and (min-width: 800px) {
+    .sideShowbtn {
+        display: none;
+  }
+}
+@keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateX(-2rem);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(-0);
+    }
+  }
+@keyframes fadeInDown {
+    0% {
+      opacity: 0;
+      transform: translateY(-2rem);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(-0);
+    }
+  }
+  @keyframes fadeOut {
+    100% {
+      opacity: 1;
+      transform: translateX(2rem);
+    }
+    0% {
+      opacity: 0;
+      transform: translateX(0);
+    }
+  }

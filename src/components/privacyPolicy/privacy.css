@@ -1,0 +1,19 @@
+.privacy {
+    text-align: justify;
+    width:85%;
+    margin:0 auto;
+    padding:20px 0;
+    font-size: 14px;
+    }
+
+.inner-list li {
+    list-style: lower-alpha !important;
+}
+
+.inner-most-list li {
+    list-style: lower-roman !important;
+}
+
+.accordion-item {
+    background-color:transparent !important;
+}

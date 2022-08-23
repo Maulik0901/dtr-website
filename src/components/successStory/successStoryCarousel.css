@@ -1,0 +1,27 @@
+.successStoryCarousel{
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+     align-items: center;
+    margin: 2rem;
+    
+}
+
+.arrowButton{
+    border: none;
+  
+    font-size: 12px;
+    color: white;
+    background-color: rgba(204, 203, 203, 0.774);
+    font-weight: bold;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    border-radius: 50px;
+    
+}
+
+.arrowButton:hover{   background-color: rgba(204, 203, 203);}

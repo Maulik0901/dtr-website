@@ -1,0 +1,15 @@
+.profile-detil-view {
+    box-shadow: 1px 1px 8px #888;
+    padding:20px;
+    background:url("../../Assets/images/dtr-bg.jpg");
+}
+
+.profile-view-fields li {
+    font-size: 15px;
+    margin-bottom: 10px;
+    list-style-type: none;
+}
+
+.profile-detil-view p {
+    font-size: 15px;
+}

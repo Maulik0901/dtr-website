@@ -11,7 +11,7 @@ function Profile({ props, profilePicId, profilePicture }) {
   const getUserInfo = () => {
     axios
       .get(
-        process.env.REACT_APP_API_URL+`user/getuser/${props?.user?.tokenUser?.userId}`
+        process.env.REACT_APP_API_URL+`user/get_single_user_id/${props?.user?.tokenUser?.userId}`
       )
       .then((data) => {
         setUserData(data?.data);

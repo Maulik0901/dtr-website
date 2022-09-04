@@ -11,14 +11,21 @@ import { communityData } from "../../communityData";
 import { educationData } from "../../EducationData";
 import { occupation } from "../../occupation";
 export default function CompleteProfile({ user }) {
+  
   const history = useNavigate();
   const { state } = useLocation();
   const [userData, setUserData] = useState();
+  const [verified, setVerified] = useState(false)
+  const isverified = localStorage.getItem("dtruserverified");
+  const [otp, setOtp] = useState("");
   const [showReligiousForm, setShowReligiousForm] = useState(false);
+
   const [showBasicForm, setShowBasicForm] = useState(true);
+
   const [showOthersInfoForm, setShowOthersInfoForm] = useState(false);
   const [showLocationForm, setShowLocationForm] = useState(false);
   const [showEducationInfoForm, setShowEducationInfoForm] = useState(false);
+
   const [percentage, setPercentage] = useState(20);
   const [Religion, setReligion] = useState("Hindu");
   const [Community, setCommunity] = useState();
@@ -94,7 +101,39 @@ export default function CompleteProfile({ user }) {
   const [about, setAbout] = useState("");
   const [profileName, setProfileName] = useState();
   const [loading, setLoading] = useState(false);
-  
+  const [identityForm,setIdentityForm] = useState(false);
+  const [idProofFile,setIdProofFile] = useState();
+  const loginUserData = user;
+  const userId = loginUserData && loginUserData.tokenUser.userId;
+  const [userStauts,setUserStatus] = useState(0);
+
+  const [idProofType,setIdProofType] = useState();
+  const [frontSide, setFrontSide] = useState({});
+  const [backSide, setbackSide] = useState({});
+  const [frontSideFile, setFrontSideFile] = useState();
+  const [backSideFile, setbackSideFile] = useState();
+
+  const [idTypeErroMessage,setIdTypeErroMessage] = useState("");
+  const [fronErroMessage,setFrontErroMessage] = useState("");
+  const [backErroMessage,setBackErroMessage] = useState("");
+  useEffect(() => {
+    setLoading(true);
+    axios
+      .get(
+        process.env.REACT_APP_API_URL+`user/get_single_user_id/${userId}`
+      )
+      .then((res) => {
+        setUserData(res.data);
+        if(res.data.isPhoneVerify){
+          setVerified(true)
+        } else {
+          setVerified(false)
+        }
+        setLoading(false);
+        // setUserStatus(res.data.status)
+      });
+  }, [userId]);
+
   const fileChangeHandler = (e) => {
     setLoading(true);
     const file = e.target.files[0];
@@ -131,6 +170,17 @@ export default function CompleteProfile({ user }) {
         });
     }
   };
+
+  const idProofFileChange = (e,type) => {
+    if(type == "front"){
+      setFrontSideFile(e.target.files[0]);    
+      setFrontSide({ url:  URL.createObjectURL(e.target.files[0]) });
+    } else {
+      setbackSideFile(e.target.files[0]);    
+      setbackSide({ url:  URL.createObjectURL(e.target.files[0]) });
+    }
+   
+  }
   const [field, setField] = useState({
     email: "",
     password: "",
@@ -328,7 +378,7 @@ export default function CompleteProfile({ user }) {
             otherDetails: {
               Profilecreatedby,
               Diet,
-            },
+            }            
           },
           {
             headers: {
@@ -340,16 +390,90 @@ export default function CompleteProfile({ user }) {
         .then((data) => {
           setShowOthersInfoForm(!showOthersInfoForm);
 
-          setPercentage(100);
-          history("/dashboard");
+          setPercentage(90);
+          setIdentityForm(true)
+          // history("/dashboard");
         })
         .catch((err) => console.log(err));
     } else alert("Fill required (*) fileds");
   };
 
+  const handleSubmitIDProofInfo = async (e) => {
+    
+    if(!idProofType){
+      setIdTypeErroMessage("Type is required!");
+      return true;
+    } else {
+      setIdTypeErroMessage("");
+      
+    }
+    if(!frontSideFile){
+      setFrontErroMessage("Front Image is required!");
+      return true;
+    } else if(frontSideFile && frontSideFile.type.substring(0, 5) !== "image"){
+      setFrontErroMessage("Front Image is allow only image");
+      return true;
+    }else {
+      setFrontErroMessage("");      
+    }
+    if(!backSideFile){
+      setBackErroMessage("Back Image is required!");
+      return true;
+    } else if(backSideFile && backSideFile.type.substring(0, 5) !== "image"){
+      setBackErroMessage("Back Image is allow only image");
+      return true;
+    }else {
+      setBackErroMessage("");      
+    }
+
+      const bodyFrontFormData = new FormData();
+      bodyFrontFormData.append("image", frontSideFile);
+      bodyFrontFormData.set("key", "178218f045ee799c77be43a0e8b0ba0b");
+      var image1 = await axios.post("https://api.imgbb.com/1/upload",bodyFrontFormData);
+      
+
+      const bodyBackFormData = new FormData();
+      bodyBackFormData.append("image", frontSideFile);
+      bodyBackFormData.set("key", "178218f045ee799c77be43a0e8b0ba0b");
+      var image2 = await axios.post("https://api.imgbb.com/1/upload",bodyBackFormData);
+      var bodyData = {
+        IdProof: {
+          idType: idProofType,
+          frontImage: image1.data.data.url,
+          backImage: image2.data.data.url
+        },
+        status: 2,
+        isIdProofVSubmit: true
+      }
+          axios
+            .post(
+              process.env.REACT_APP_API_URL+"user/edituser",
+              bodyData,
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `${userInfo}`,
+                },
+              }
+            )
+            .then((res) => {
+             
+              setPercentage(100);
+             
+              setLoading(false);
+              getUserInfo();
+              setIdentityForm(false)
+              history("/dashboard");
+            })
+            .catch((err) => {
+              setLoading(false);
+              console.log(err);
+            });
+  }
+
   const getUserInfo = (id) => {
     axios
-      .get(process.env.REACT_APP_API_URL+`user/getuser/${id}`)
+      .get(process.env.REACT_APP_API_URL+`user/getuser/${userId}`)
       .then((data) => {
         setUserData(data?.data);
         setField(data.data);
@@ -429,13 +553,35 @@ export default function CompleteProfile({ user }) {
         });
   }, [countryCode, stateCode]);
 
-  const [verified, setVerified] = useState(false)
-  const isverified = localStorage.getItem("dtruserverified");
-  const [otp, setOtp] = useState("");
+  
   const handleOtpVerification = () => {
+    console.log("asdfkjhdkfjh",user)
     if (otp == user.tokenUser.otpVerification) {
-      setVerified(true);
-      localStorage.setItem("dtruserverified", "true");
+      console.log("woiuqefhkjdsfnj")
+      setLoading(true);
+      axios
+        .post(
+          process.env.REACT_APP_API_URL+"user/otpVerify",{},
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${userInfo}`,
+            },
+          }
+        )
+        .then((res) => {
+          
+          setVerified(true);
+          localStorage.setItem("dtruserverified", "true");
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.log({err})
+          alert(JSON.stringify(err));
+        });
+      // setVerified(true);
+      // localStorage.setItem("dtruserverified", "true");
+      // otpVerify
     } else {
       alert("Invalid OTP");
     }
@@ -449,7 +595,7 @@ export default function CompleteProfile({ user }) {
         justifyContent: "flex-start",
       }}
     >
-      {verified ? (
+      {verified && !loading ? (
         <div
           className="login-card"
           style={{ minWidth: "60%", minHeight: "105vh" }}
@@ -459,7 +605,9 @@ export default function CompleteProfile({ user }) {
             {showReligiousForm ? "Religious Info" : ""}{" "}
             {showFamilyForm ? "Family Info" : ""}{" "}
             {showLocationForm ? "Location Info" : ""}{" "}
-            {showOthersInfoForm ? "Final Info" : ""} To Continue
+            {showOthersInfoForm ? "Final Info " : ""} 
+            {identityForm ? "Identity Info " : ""} 
+            To Continue
           </h3>
           {showBasicForm ? (
             <Form onSubmit={(e) => e.preventDefault()}>
@@ -1395,13 +1543,90 @@ export default function CompleteProfile({ user }) {
               </div>
             </Form>
           ) : null}
+
+          {
+            identityForm ? (
+              <>
+              <Form onSubmit={(e) => e.preventDefault()}>
+                  <Form.Group controlId="formFileDisabled" className="mb-3">
+                    <Form.Label>ID proof*</Form.Label>
+                    <Form.Select
+                      onChange={(e) => setIdProofType(e.target.value)}
+                      value={idProofType}
+                      required
+                      isInvalid={!!idTypeErroMessage}
+                    >
+                      <option>select</option>
+                      <option value={"Driving License"}>Driving License</option>
+                      <option value={"Voter ID"}>Voter ID</option>
+                      <option value={"Aadhaaar"}>Aadhaaar</option>
+                      <option value={"Passport"}>Passport</option>                      
+                    </Form.Select>
+                    <Form.Control.Feedback className="valid-feedback" type='invalid'>                       
+                          {idTypeErroMessage}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                  <Form.Group controlId="formFileDisabled" className="mb-3">
+                      <Form.Label>Attach Id Proof For Front Image:</Form.Label>
+                      <Form.Control
+                        type="file"
+                        onChange={(e) => idProofFileChange(e,"front")}
+                        isInvalid={!!fronErroMessage}
+                      ></Form.Control>                      
+                      <Form.Control.Feedback className="valid-feedback" type='invalid'>                       
+                          {fronErroMessage}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                  {frontSide.url && (
+                    <div>
+                      <img className="displayImage" src={frontSide?.url} alt="" />
+                    </div>
+                  )}
+                  <Form.Group controlId="formFileDisabled" className="mb-3">
+                      <Form.Label>Attach Id Proof For back Image:</Form.Label>
+                      <Form.Control
+                        type="file"
+                        onChange={(e) => idProofFileChange(e,"back")}
+                        isInvalid={!!backErroMessage}
+                      ></Form.Control>
+                      <Form.Control.Feedback className="valid-feedback" type='invalid'>                       
+                          {backErroMessage}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                  {backSide.url && (
+                    <div>
+                      <img className="displayImage" src={backSide?.url} alt="" />
+                    </div>
+                  )}
+                  <div
+                    style={{
+                      display: "flex",
+                      width: "100%",
+                      flexDirection: "row",
+                      justifyContent: "flex-end",
+                    }}
+                  >
+                    <button
+                      onClick={() => handleSubmitIDProofInfo()}
+                      className="primary"
+                      style={{ width: "100px", margin: "5px" }}
+                    >
+                      Continue
+                    </button>
+                  </div>
+              </Form>
+              </>
+            ) : null
+          }
         </div>
       ) : (
         <div
           className="login-card"
           style={{ minWidth: "60%", minHeight: "105vh" }}
         >
-          <Form
+          {
+            !loading && 
+            <Form
             onSubmit={(e) => {
               e.preventDefault();
               handleOtpVerification();
@@ -1417,6 +1642,8 @@ export default function CompleteProfile({ user }) {
             </Form.Group>
             <Button type="submit">Submit</Button>
           </Form>
+          }
+          
         </div>
       )}
     </div>

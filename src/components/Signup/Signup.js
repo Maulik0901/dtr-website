@@ -23,6 +23,7 @@ export default function Signup(props) {
       password: field?.password,
       gender: gender,
       phone: `+91${field.phone}`,
+      status: 1
     };
     axios
       .post(process.env.REACT_APP_API_URL+"user/register", data)

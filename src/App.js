@@ -3,7 +3,7 @@ import "./App.css";
 import Header from "./components/header/header";
 import Footer from "./components/footer/footer";
 import jwt_decode from "jwt-decode";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes,useNavigate } from "react-router-dom";
 import Landing from "./screens/Landing";
 import Login from "./components/Login/Login";
 import Signup from "./components/Signup/Signup";
@@ -12,8 +12,9 @@ import { useEffect, useState } from "react";
 import TermsOfUse from "./components/terms-of-use/Terms";
 import PrivacyPolicy from "./components/privacyPolicy/Privacy";
 import Dashboard from "./screens/Dashboard";
+import EmailVerify from "./screens/emailVerify";
 import Setting from "./screens/Setting";
-
+import axios from "axios";
 import Matches from "./components/myprofile/Matches";
 import CompleteProfile from "./components/myprofile/completeProfile";
 import Searches from "./screens/Searches";
@@ -24,17 +25,37 @@ import RecentlyViewed from "./components/myprofile/RecentlyViewed";
 import Chat from "./components/Chat/Chat";
 import Admin from "./admin";
 import AdminLanding from "./screens/Admin/AdminLanding";
+
 function App() {
+  // const history = useNavigate();
   const [user, setUser] = useState(null);
+  const [userStauts,setUserStatus] = useState(0);
+
   // const isverified=localStorage.getItem('dtruserverified')
   const saveUser = (e) => {
     setUser(jwt_decode(e));
+    // var tokenUser = jwt_decode(e);
+    // console.log("tokenUser.tokenUser.userId", tokenUser.tokenUser.userId)
+    // if(tokenUser.tokenUser.userId) {
+    //    axios
+    //   .get(
+    //     process.env.REACT_APP_API_URL+`user/get_single_user_id/${tokenUser.tokenUser.userId}`
+    //   )
+    //   .then((res) => {
+    //     console.log("app.js",res.data)
+    //     if(res.data && res.data.status){
+    //       setUserStatus(res.data.status)
+    //     }
+    //   });
+    // }
   };
   useEffect(() => {
-    console.log("asdfjshf")
+    
     let data = localStorage.getItem("dtrmatrimonyjwt");
     if (data) {
       saveUser(data);
+      
+     
     }
   }, []);
 
@@ -43,9 +64,10 @@ function App() {
   };
 
   const logOut = () => {
-    localStorage.removeItem("dtrmatrimonyjwt");
-    localStorage.removeItem("dtrusergender");
-    window.location.href = "/";
+    // localStorage.removeItem("dtrmatrimonyjwt");
+    // localStorage.removeItem("dtrusergender");
+    // history("/login")
+    // window.location.href = "/";
   };
   const [admin, setAdmin] = useState(null);
   // const isverified=localStorage.getItem('dtruserverified')
@@ -56,6 +78,7 @@ function App() {
     let data = localStorage.getItem("dtrmatrimonyjwtadmin");
     if (data) {
       saveadmin(data);
+      
     }
   }, []);
 
@@ -70,12 +93,14 @@ function App() {
 
   return (
     <Router>
-      <Header
-        user={user}
-        logOut={() => {
-          logOut();
-        }}
-      />
+       <Header
+          user={user}
+          logOut={() => {
+            logOut();
+          }}
+        />
+      
+      
       <Routes>
         <Route path="/" element={<Landing user={user} />} />
         <Route
@@ -109,7 +134,7 @@ function App() {
             )
           }
         />
-        <Route path="/complete-profile" element={<CompleteProfile />} />
+        <Route path="/complete-profile" element={<CompleteProfile user={user} />} />
         {/* <Route
           path="/admin-dtr-rgvv734t5874rwrwsvdt52378432vhsssf872trsdfgvdvg27tr3-secured"
           element={<Admin />}
@@ -216,6 +241,8 @@ function App() {
         <Route path="privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/dashboard2" element={<Dashboard />} />
         <Route path="/setting" element={<Setting />} />
+        <Route path="/verify" element={<EmailVerify />} />
+        
         {/* <Route
           exact
           path="/admin-dtr-rgvv734t5874rwrwsvdt52378432vhsssf872trsdfgvdvg27tr3-secured-user"
